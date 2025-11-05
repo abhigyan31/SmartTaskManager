@@ -52,9 +52,9 @@ function authenticateToken(req, res, next) {
 }
 
 // API routes
-app.get('/', (req, res) => {
-  res.send('SmartTask Manager backend server is running!');
-});
+//app.get('/', (req, res) => {
+  //res.send('SmartTask Manager backend server is running!');
+//});
 
 app.post('/api/register', async (req, res) => {
   try {
@@ -165,4 +165,12 @@ app.get('*', (req, res) => {
 // Start server
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
+});
+
+// Serve static frontend files from frontend folder
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Catch all other routes and return the frontend's main HTML file
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../frontend/dashboard.html')); // Or your preferred start page
 });
