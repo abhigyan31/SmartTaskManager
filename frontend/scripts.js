@@ -1,6 +1,5 @@
 // Change this to your actual Render backend URL
-const BASE_URL = 'https://smarttaskmanager-1yf8.onrender.com';
-
+const BASE_URL = 'https://smarttaskmanager-k2wt.onrender.com';
 // =================== Dashboard Page Scripts =================== //
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('taskForm')) {
@@ -202,3 +201,4 @@ if (document.getElementById('signupForm')) {
         }
     });
 }
+
