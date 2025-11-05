@@ -162,10 +162,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../frontend/dashboard.html'));
 });
 
-// Start server
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
 
 // Serve static frontend files from frontend folder
 app.use(express.static(path.join(__dirname, '../frontend')));
@@ -173,4 +169,11 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 // Catch all other routes and return the frontend's main HTML file
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../frontend/dashboard.html')); // Or your preferred start page
+});
+
+
+
+// Start server
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
