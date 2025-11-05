@@ -43,7 +43,7 @@ function authenticateToken(req, res, next) {
   if (!token)
     return res.status(401).json({ message: 'Missing token' });
 
-  jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret', (err, user) => {  // Use env JWT_SECRET
+  jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret', (err, user) => {
     if (err)
       return res.status(403).json({ message: 'Invalid token' });
     req.user = user;
@@ -51,7 +51,7 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// API routes here...
+// API routes
 app.get('/', (req, res) => {
   res.send('SmartTask Manager backend server is running!');
 });
@@ -159,7 +159,7 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Catch all other routes and return the frontend's main HTML file
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../frontend/dashboard.html')); // Change file if needed
+  res.sendFile(path.resolve(__dirname, '../frontend/dashboard.html'));  // Adjust if your main HTML is different
 });
 
 // Start server
