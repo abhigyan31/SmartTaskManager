@@ -51,10 +51,13 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// API routes
-//app.get('/', (req, res) => {
-  //res.send('SmartTask Manager backend server is running!');
-//});
+// API routes (default root route commented out, so frontend is shown)
+/*
+// Optional: Show backend-only message (DISABLED)
+// app.get('/', (req, res) => {
+//   res.send('SmartTask Manager backend server is running!');
+// });
+*/
 
 app.post('/api/register', async (req, res) => {
   try {
@@ -154,6 +157,8 @@ app.delete('/api/tasks/:id', authenticateToken, async (req, res) => {
   }
 });
 
+// --- Frontend integration: THIS MUST GO AFTER ALL OTHER ROUTES ---
+
 // Serve static frontend files from frontend folder
 app.use(express.static(path.join(__dirname, '../frontend')));
 
@@ -161,17 +166,6 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../frontend/dashboard.html'));
 });
-
-
-// Serve static frontend files from frontend folder
-app.use(express.static(path.join(__dirname, '../frontend')));
-
-// Catch all other routes and return the frontend's main HTML file
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../frontend/dashboard.html')); // Or your preferred start page
-});
-
-
 
 // Start server
 app.listen(port, () => {
