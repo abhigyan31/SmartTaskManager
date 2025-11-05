@@ -1,5 +1,6 @@
 // Change this to your actual Render backend URL
-const BASE_URL = 'https://smarttaskmanager-s93y.onrender.com';
+const BASE_URL = 'https://smarttaskmanager-1yf8.onrender.com';
+
 // =================== Dashboard Page Scripts =================== //
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('taskForm')) {
@@ -75,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         alert('Task cannot be empty');
                         return;
                     }
-                    fetch(`${BASE_URL}/api/tasks/${task.id}`, {
+                    fetch(`${BASE_URL}/api/tasks/${task._id}`, { // CHANGED HERE
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -98,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
             };
 
             deleteBtn.onclick = () => {
-                fetch(`${BASE_URL}/api/tasks/${task.id}`, {
+                fetch(`${BASE_URL}/api/tasks/${task._id}`, { // CHANGED HERE
                     method: 'DELETE',
                     headers: { 'Authorization': 'Bearer ' + token }
                 })
@@ -201,5 +202,3 @@ if (document.getElementById('signupForm')) {
         }
     });
 }
-
-
