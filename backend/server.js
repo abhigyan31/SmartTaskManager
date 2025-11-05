@@ -4,14 +4,17 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require('path');  // Added path module
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;  // Use environment port if available
 
-// Connect to MongoDB (use 127.0.0.1 for reliability on Windows)
-mongoose.connect('mongodb://127.0.0.1:27017/smarttaskdb')
+
+// Connect to MongoDB (use env variable or fallback to local)
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/smarttaskdb')
   .then(() => console.log('MongoDB connected successfully'))
   .catch(err => console.error('MongoDB connection error:', err));
+
 
 // Define Mongoose schemas & models
 const userSchema = new mongoose.Schema({
@@ -28,9 +31,11 @@ const taskSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 const Task = mongoose.model('Task', taskSchema);
 
+
 // Middleware
 app.use(cors());
 app.use(express.json());
+
 
 // JWT authentication middleware
 function authenticateToken(req, res, next) {
@@ -42,7 +47,7 @@ function authenticateToken(req, res, next) {
   if (!token)
     return res.status(401).json({ message: 'Missing token' });
 
-  jwt.verify(token, 'your_jwt_secret', (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret', (err, user) => {  // Use env JWT_SECRET
     if (err)
       return res.status(403).json({ message: 'Invalid token' });
     req.user = user;
@@ -50,12 +55,13 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// Root route
+
+// API routes ...
+
 app.get('/', (req, res) => {
   res.send('SmartTask Manager backend server is running!');
 });
 
-// Register new user
 app.post('/api/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -75,7 +81,6 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// User login
 app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -87,7 +92,7 @@ app.post('/api/login', async (req, res) => {
     if (!isMatch)
       return res.status(400).json({ message: 'Invalid credentials' });
 
-    const token = jwt.sign({ email: user.email }, 'your_jwt_secret', { expiresIn: '1h' });
+    const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET || 'your_jwt_secret', { expiresIn: '1h' });
     res.json({ message: 'Login successful', token });
   } catch (err) {
     console.error(err);
@@ -95,7 +100,6 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// Get tasks for logged-in user
 app.get('/api/tasks', authenticateToken, async (req, res) => {
   try {
     const userTasks = await Task.find({ email: req.user.email });
@@ -106,7 +110,6 @@ app.get('/api/tasks', authenticateToken, async (req, res) => {
   }
 });
 
-// Add new task
 app.post('/api/tasks', authenticateToken, async (req, res) => {
   try {
     const { task } = req.body;
@@ -122,7 +125,6 @@ app.post('/api/tasks', authenticateToken, async (req, res) => {
   }
 });
 
-// Update existing task
 app.put('/api/tasks/:id', authenticateToken, async (req, res) => {
   try {
     const { task } = req.body;
@@ -146,7 +148,6 @@ app.put('/api/tasks/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// Delete task by ID
 app.delete('/api/tasks/:id', authenticateToken, async (req, res) => {
   try {
     const deletedTask = await Task.findOneAndDelete({ _id: req.params.id, email: req.user.email });
@@ -160,7 +161,17 @@ app.delete('/api/tasks/:id', authenticateToken, async (req, res) => {
   }
 });
 
+
+// Serve static frontend files from frontend folder
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Catch all other routes and return the frontend's main HTML file
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend', 'dashboard.html')); // Change file if you want your main front page to be login.html or signup.html
+});
+
+
 // Start server
 app.listen(port, () => {
-  console.log(`Server listening on http://localhost:${port}`);
+  console.log(`Server listening on port ${port}`);
 });
