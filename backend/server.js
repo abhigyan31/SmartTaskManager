@@ -9,12 +9,10 @@ const path = require('path');  // Added path module
 const app = express();
 const port = process.env.PORT || 3000;  // Use environment port if available
 
-
 // Connect to MongoDB (use env variable or fallback to local)
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/smarttaskdb')
   .then(() => console.log('MongoDB connected successfully'))
   .catch(err => console.error('MongoDB connection error:', err));
-
 
 // Define Mongoose schemas & models
 const userSchema = new mongoose.Schema({
@@ -31,11 +29,9 @@ const taskSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 const Task = mongoose.model('Task', taskSchema);
 
-
 // Middleware
 app.use(cors());
 app.use(express.json());
-
 
 // JWT authentication middleware
 function authenticateToken(req, res, next) {
@@ -55,9 +51,7 @@ function authenticateToken(req, res, next) {
   });
 }
 
-
-// API routes ...
-
+// API routes here...
 app.get('/', (req, res) => {
   res.send('SmartTask Manager backend server is running!');
 });
@@ -65,7 +59,6 @@ app.get('/', (req, res) => {
 app.post('/api/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
-
     const existingUser = await User.findOne({ email });
     if (existingUser)
       return res.status(400).json({ message: 'User already exists' });
@@ -161,15 +154,13 @@ app.delete('/api/tasks/:id', authenticateToken, async (req, res) => {
   }
 });
 
-
 // Serve static frontend files from frontend folder
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Catch all other routes and return the frontend's main HTML file
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend', 'dashboard.html')); // Change file if you want your main front page to be login.html or signup.html
+  res.sendFile(path.resolve(__dirname, '../frontend/dashboard.html')); // Change file if needed
 });
-
 
 // Start server
 app.listen(port, () => {
