@@ -1,4 +1,5 @@
-// scripts.js
+// Change this to your actual Render backend URL
+const BASE_URL = 'https://smarttaskmanager-1yf8.onrender.com';
 
 // =================== Dashboard Page Scripts =================== //
 document.addEventListener('DOMContentLoaded', function() {
@@ -19,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         function loadTasks() {
-            fetch('http://localhost:3000/api/tasks', {
+            fetch(`${BASE_URL}/api/tasks`, {
                 headers: { 'Authorization': 'Bearer ' + token }
             })
             .then(res => {
@@ -75,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         alert('Task cannot be empty');
                         return;
                     }
-                    fetch(`http://localhost:3000/api/tasks/${task.id}`, {
+                    fetch(`${BASE_URL}/api/tasks/${task.id}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -98,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
             };
 
             deleteBtn.onclick = () => {
-                fetch(`http://localhost:3000/api/tasks/${task.id}`, {
+                fetch(`${BASE_URL}/api/tasks/${task.id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': 'Bearer ' + token }
                 })
@@ -122,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const newTask = taskInput.value.trim();
             if (!newTask) return;
 
-            fetch('http://localhost:3000/api/tasks', {
+            fetch(`${BASE_URL}/api/tasks`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -156,7 +157,7 @@ if (document.getElementById('loginForm')) {
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
         try {
-            const response = await fetch('http://localhost:3000/api/login', {
+            const response = await fetch(`${BASE_URL}/api/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -184,7 +185,7 @@ if (document.getElementById('signupForm')) {
         const password = document.getElementById('password').value;
 
         try {
-            const response = await fetch('http://localhost:3000/api/register', {
+            const response = await fetch(`${BASE_URL}/api/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, email, password }),
