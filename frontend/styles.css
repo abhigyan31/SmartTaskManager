@@ -280,3 +280,17 @@ input.form-control:focus,
     padding: 0.28rem 0.21rem;
   }
 }
+
+/* Navbar logout link styling */
+#logoutBtn {
+  color: #ff6666 !important; /* Make logout link red for visibility */
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+#logoutBtn:hover {
+  color: #ff0000 !important; /* Darker red on hover */
+  text-decoration: underline;
+}
+
